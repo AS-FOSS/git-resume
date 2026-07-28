@@ -11,8 +11,8 @@
   <img src="https://img.shields.io/badge/LaTeX-XeLaTeX-008080?style=flat-square&logo=latex&logoColor=white" alt="XeLaTeX" />
   <img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white" alt="GitHub Actions" />
   <img src="https://img.shields.io/badge/Pages-GitHub%20Pages-222?style=flat-square&logo=github&logoColor=white" alt="GitHub Pages" />
-  <img src="https://img.shields.io/github/stars/sadigaxund/Resume?style=flat-square" alt="Stars" />
-  <img src="https://img.shields.io/github/forks/sadigaxund/Resume?style=flat-square" alt="Forks" />
+  <img src="https://img.shields.io/github/stars/sadigaxund/git-resume?style=flat-square" alt="Stars" />
+  <img src="https://img.shields.io/github/forks/sadigaxund/git-resume?style=flat-square" alt="Forks" />
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
 </p>
 
@@ -35,7 +35,7 @@ Fork it, put your resume in `template/`, push. GitHub Actions compiles it, cuts 
 4. Set your name inside the `.tex` file itself — it's hardcoded in the header, so `resume.yml`'s `author` field won't change it for you
 5. Push to `main`
 
-Turn on Pages once, under Settings → Pages → Source: GitHub Actions, and the viewer goes live on the next push.
+> NOTE: Turn on Pages once (Settings → Pages → Source: GitHub Actions) — this is a one-time manual step, **per repo**. Forks don't inherit this setting; each fork owner must enable it themselves.
 
 ## What happens on push
 
@@ -44,6 +44,8 @@ One workflow handles all of it:
 - Compiles `template/*.tex` with XeLaTeX (needed for the bundled fonts — plain pdflatex won't render them)
 - Publishes the PDF as a release: a `latest-<variant>` tag that always points at the newest build, plus a dated `resume-<variant>-YYYY-MM-DD` tag whenever the content actually changes
 - Rebuilds the GitHub Pages viewer, which reads the release list and lets you flip between every version you've published
+
+See it in action: [sadigaxund.github.io/git-resume](https://sadigaxund.github.io/git-resume/) — two-level profile/version selector, renders PDFs inline in your browser.
 
 Nothing is committed back to the repo. The PDF and the site are build output, not history you have to manage by hand.
 
