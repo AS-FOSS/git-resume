@@ -14,7 +14,7 @@
   .btn{display:inline-block;padding:.4rem 1rem;background:#2563eb;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.875rem;text-decoration:none;line-height:1.4;margin-left:auto}
   .btn:hover{background:#1d4ed8}
   .viewer{flex:1;display:flex;justify-content:center;overflow:auto}
-  .viewer iframe{width:100%;height:100%;border:none}
+  .viewer object{width:100%;height:100%}
 </style>
 </head>
 <body>
@@ -25,17 +25,15 @@
   <a class="btn" id="downloadBtn" href="#" download>Download</a>
 </div>
 <div class="viewer">
-  <iframe id="pdfViewer" title="Resume PDF"></iframe>
-  <p id="fallbackMsg" style="display:none;color:#fff;text-align:center;padding:2rem">
-    Your browser doesn't support inline PDF viewing.
-    <a id="fallbackLink" href="#" style="color:#60a5fa">Download the resume</a>.
-  </p>
+  <object id="pdfViewer" type="application/pdf" width="100%" height="100%">
+    <p>Your browser doesn't support inline PDF viewing. <a id="fallbackLink" href="#">Download the resume</a>.</p>
+  </object>
 </div>
 <script>
-const owner='{{OWNER}}',repo='{{REPO}}',viewer=document.getElementById('pdfViewer'),downloadBtn=document.getElementById('downloadBtn'),fallbackLink=document.getElementById('fallbackLink'),fallbackMsg=document.getElementById('fallbackMsg'),profileSelect=document.getElementById('profileSelect'),versionSelect=document.getElementById('versionSelect'),pageTitle=document.getElementById('pageTitle'),variants={};
-function loadVersion(e){downloadBtn.href=e.url;downloadBtn.download=e.name;if(fallbackLink)fallbackLink.href=e.url;viewer.src='';fetch(e.url).then(r=>r.blob()).then(b=>{const u=URL.createObjectURL(new Blob([b],{type:'application/pdf'}));viewer.src=u}).catch(()=>{viewer.src=e.url;fallbackMsg&&(fallbackMsg.style.display='block')})}
+const owner='{{OWNER}}',repo='{{REPO}}',viewer=document.getElementById('pdfViewer'),downloadBtn=document.getElementById('downloadBtn'),fallbackLink=document.getElementById('fallbackLink'),profileSelect=document.getElementById('profileSelect'),versionSelect=document.getElementById('versionSelect'),pageTitle=document.getElementById('pageTitle'),variants={};
+function loadVersion(e){downloadBtn.href=e.url;downloadBtn.download=e.name;if(fallbackLink)fallbackLink.href=e.url;viewer.data='';fetch('https://api.github.com/repos/'+owner+'/'+repo+'/releases/assets/'+e.aid,{headers:{Accept:'application/octet-stream'},redirect:'follow'}).then(r=>r.blob()).then(b=>{viewer.data=URL.createObjectURL(new Blob([b],{type:'application/pdf'}))}).catch(()=>{viewer.data=e.url})}
 function selectVariant(id){const v=variants[id];versionSelect.innerHTML='';v.versions.forEach((ver,i)=>{const o=document.createElement('option');o.value=i;o.textContent=ver.label;versionSelect.appendChild(o)});pageTitle.textContent=v.label+' — Resume';loadVersion(v.versions[0])}
-fetch('https://api.github.com/repos/'+owner+'/'+repo+'/releases').then(r=>r.json()).then(releases=>{for(const rel of releases){const a=(rel.assets||[]).find(a=>a.name.endsWith('.pdf'));if(!a)continue;      let m=rel.tag_name.match(/^latest-(.+)$/);if(m){const id=m[1];if(!variants[id])variants[id]={label:rel.name||id,versions:[]};variants[id].label=rel.name||id;variants[id].versions.unshift({label:'Latest',url:a.browser_download_url,name:a.name});continue}m=rel.tag_name.match(/^resume-(.+)-(\d{4}-\d{2}-\d{2})$/);if(m){const id=m[1],date=m[2];if(!variants[id])variants[id]={label:id,versions:[]};variants[id].versions.push({label:date,url:a.browser_download_url,name:a.name})}}
+fetch('https://api.github.com/repos/'+owner+'/'+repo+'/releases').then(r=>r.json()).then(releases=>{for(const rel of releases){const a=(rel.assets||[]).find(a=>a.name.endsWith('.pdf'));if(!a)continue;      let m=rel.tag_name.match(/^latest-(.+)$/);if(m){const id=m[1];if(!variants[id])variants[id]={label:rel.name||id,versions:[]};variants[id].label=rel.name||id;variants[id].versions.unshift({label:'Latest',url:a.browser_download_url,name:a.name,aid:a.id});continue}m=rel.tag_name.match(/^resume-(.+)-(\d{4}-\d{2}-\d{2})$/);if(m){const id=m[1],date=m[2];if(!variants[id])variants[id]={label:id,versions:[]};variants[id].versions.push({label:date,url:a.browser_download_url,name:a.name,aid:a.id})}}
 const ids=Object.keys(variants).sort();ids.forEach(id=>profileSelect.add(new Option(variants[id].label,id)));profileSelect.addEventListener('change',()=>selectVariant(profileSelect.value));versionSelect.addEventListener('change',()=>{const v=variants[profileSelect.value].versions[versionSelect.value];loadVersion(v)});if(ids.length)selectVariant(ids[0])}).catch(e=>console.error(e));
 </script>
 </body>
