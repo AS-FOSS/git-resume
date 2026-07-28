@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#525659;height:100vh;display:flex;flex-direction:column}
+  .toolbar{background:#1a1a1a;color:#fff;display:flex;align-items:center;padding:.5rem 1rem;gap:.75rem;flex-shrink:0;flex-wrap:wrap}
+  .toolbar h1{font-size:1rem;font-weight:500;margin-right:.25rem}
+  select{padding:.4rem .5rem;border-radius:4px;border:1px solid #555;background:#333;color:#fff;font-size:.875rem;cursor:pointer}
+  select:focus{outline:none;border-color:#2563eb}
+  .btn{display:inline-block;padding:.4rem 1rem;background:#2563eb;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.875rem;text-decoration:none;line-height:1.4;margin-left:auto}
+  .btn:hover{background:#1d4ed8}
+  .viewer{flex:1;display:flex;justify-content:center;overflow:auto}
+  .viewer object{width:100%;height:100%}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <h1 id="pageTitle">Resume</h1>
+  <select id="profileSelect"></select>
+  <select id="versionSelect"></select>
+  <a class="btn" id="downloadBtn" href="#" download>Download</a>
+</div>
+<div class="viewer">
+  <object id="pdfViewer" type="application/pdf" width="100%" height="100%">
+    <p>Your browser doesn't support PDF viewing. <a id="fallbackLink" href="#">Download the resume</a>.</p>
+  </object>
+</div>
+<script>
+const owner='{{OWNER}}',repo='{{REPO}}',viewer=document.getElementById('pdfViewer'),downloadBtn=document.getElementById('downloadBtn'),fallbackLink=document.getElementById('fallbackLink'),profileSelect=document.getElementById('profileSelect'),versionSelect=document.getElementById('versionSelect'),pageTitle=document.getElementById('pageTitle'),variants={};
+function loadVersion(e){downloadBtn.href=e.url;downloadBtn.download=e.name;if(fallbackLink)fallbackLink.href=e.url;viewer.data='';fetch(e.url).then(r=>r.blob()).then(b=>{viewer.data=URL.createObjectURL(b)}).catch(()=>{viewer.data=e.url})}
+function selectVariant(id){const v=variants[id];versionSelect.innerHTML='';v.versions.forEach((ver,i)=>{const o=document.createElement('option');o.value=i;o.textContent=ver.label;versionSelect.appendChild(o)});pageTitle.textContent=v.label+' — Resume';loadVersion(v.versions[0])}
+fetch('https://api.github.com/repos/'+owner+'/'+repo+'/releases').then(r=>r.json()).then(releases=>{for(const rel of releases){const a=(rel.assets||[]).find(a=>a.name.endsWith('.pdf'));if(!a)continue;      let m=rel.tag_name.match(/^latest-(.+)$/);if(m){const id=m[1];if(!variants[id])variants[id]={label:rel.name||id,versions:[]};variants[id].label=rel.name||id;variants[id].versions.unshift({label:'Latest',url:a.browser_download_url,name:a.name});continue}m=rel.tag_name.match(/^resume-(.+)-(\d{4}-\d{2}-\d{2})$/);if(m){const id=m[1],date=m[2];if(!variants[id])variants[id]={label:id,versions:[]};variants[id].versions.push({label:date,url:a.browser_download_url,name:a.name})}}
+const ids=Object.keys(variants).sort();ids.forEach(id=>profileSelect.add(new Option(variants[id].label,id)));profileSelect.addEventListener('change',()=>selectVariant(profileSelect.value));versionSelect.addEventListener('change',()=>{const v=variants[profileSelect.value].versions[versionSelect.value];loadVersion(v)});if(ids.length)selectVariant(ids[0])}).catch(e=>console.error(e));
+</script>
+</body>
+</html>

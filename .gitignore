@@ -1,0 +1,37 @@
+# Whitelist approach: ignore all, then allow specific
+*
+
+# Allow descending into directories
+!*/
+
+# Allow source
+!*.tex
+!*.sh
+!.gitignore
+!template/icons/*
+!template/fonts/*.ttf
+!skills/*.md
+!AGENTS.md
+!README.md
+!TODO.md
+!template/index.html
+!template/resume.yml
+!.github/workflows/*.yml
+
+# Re-ignore build artifacts even if matched above
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.xdv
+*.bbl
+*.blg
+*.toc
+
+tmp/
+_cache/
+__pycache__/
+.claude/
+Archive/

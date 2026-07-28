@@ -1,0 +1,179 @@
+name: Build Resume
+run-name: Resume (${{ github.ref_name }})
+
+on:
+  push:
+    branches:
+      - main
+      - 'resume/**'
+    paths:
+      - "template/**"
+      - ".github/workflows/**"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: build-resume
+  cancel-in-progress: false
+
+env:
+  CFG: template/resume.yml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check TeX Live image digest
+        id: digest
+        run: |
+          DIGEST=$(docker manifest inspect ghcr.io/xu-cheng/texlive-full:latest 2>/dev/null | \
+            jq -r '
+              if .manifests then
+                [.manifests[] | select(.platform.arch == "amd64") | .digest][0] // .manifests[0].digest
+              elif .config then
+                .config.digest
+              else "" end' 2>/dev/null || echo "")
+          echo "digest=${DIGEST:-unknown}" >> "$GITHUB_OUTPUT"
+
+      - name: Cache TeX Live Docker image
+        uses: actions/cache@v4
+        id: cache-texlive
+        with:
+          path: /tmp/texlive-docker
+          key: texlive-${{ steps.digest.outputs.digest }}
+
+      - name: Load TeX Live image (cache hit)
+        if: steps.cache-texlive.outputs.cache-hit == 'true'
+        run: docker load -i /tmp/texlive-docker/image.tar
+
+      - name: Pull and save TeX Live image (cache miss)
+        if: steps.cache-texlive.outputs.cache-hit != 'true'
+        run: |
+          docker pull ghcr.io/xu-cheng/texlive-full:latest
+          mkdir -p /tmp/texlive-docker
+          docker save ghcr.io/xu-cheng/texlive-full:latest -o /tmp/texlive-docker/image.tar
+
+      - name: Read config
+        run: |
+          pip install pyyaml -q
+          python3 << 'PYEOF'
+          import yaml, os
+          c = yaml.safe_load(open(os.environ['CFG']))
+          with open(os.environ['GITHUB_ENV'], 'a') as env:
+              env.write(f"VARIANT={c.get('variant', '')}\n")
+              env.write(f"VARIANT_LABEL={c.get('label', '')}\n")
+              env.write(f"AUTHOR={c.get('author', '')}\n")
+              env.write(f"TEMPLATE={c.get('template', '')}\n")
+              env.write(f"OUTPUT={c.get('output', '')}\n")
+          PYEOF
+
+      - name: Compile PDF (XeLaTeX)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: template/${{ env.TEMPLATE }}
+          latexmk_use_xelatex: true
+          work_in_root_file_dir: true
+          extra_fonts: |
+            template/fonts/*.ttf
+
+      - name: Prepare PDFs
+        run: |
+          STEM=$(basename "${{ env.TEMPLATE }}" .tex)
+          OUTPUT="${{ env.OUTPUT }}"
+          [ -z "$OUTPUT" ] && OUTPUT="$STEM"
+          echo "OUTPUT=$OUTPUT" >> $GITHUB_ENV
+          if [ ! -f "${STEM}.pdf" ]; then
+            cp "template/${STEM}.pdf" "${STEM}.pdf"
+          fi
+          if [ "${STEM}.pdf" != "${OUTPUT}.pdf" ]; then
+            cp "${STEM}.pdf" "${OUTPUT}.pdf"
+          fi
+          mkdir -p Archive
+          DATE=$(date -u +%Y-%m-%d)
+          echo "DATE=$DATE" >> $GITHUB_ENV
+          cp -f "${OUTPUT}.pdf" "Archive/${OUTPUT}_${DATE}.pdf"
+
+      - name: Upload PDFs to Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VARIANT="${{ env.VARIANT }}"
+          LABEL="${{ env.VARIANT_LABEL }}"
+          LATEST_TAG="latest-${VARIANT}"
+          DATE=$(date -u +%Y-%m-%d)
+          DATED_TAG="resume-${VARIANT}-${DATE}"
+
+          TMPFILE=$(mktemp)
+          CHANGED=1
+          if gh release download "$LATEST_TAG" -p "${OUTPUT}.pdf" -o "$TMPFILE" 2>/dev/null; then
+            CURRENT=$(sha256sum "$TMPFILE" | cut -d' ' -f1)
+            NEW=$(sha256sum "${OUTPUT}.pdf" | cut -d' ' -f1)
+            [ "$CURRENT" = "$NEW" ] && CHANGED=0
+          fi
+          rm -f "$TMPFILE"
+
+          if [ "$CHANGED" = "1" ]; then
+            gh release delete "$DATED_TAG" -y --cleanup-tag 2>/dev/null || true
+            gh release create "$DATED_TAG" \
+              --title "${LABEL} — ${DATE}" \
+              --prerelease \
+              --notes "Built on ${DATE}" \
+              "Archive/${OUTPUT}_${DATE}.pdf"
+          else
+            PREFIX="resume-${VARIANT}-"
+            LATEST_DATED=$(gh release list --limit 50 --json tagName --jq \
+              "[.[].tagName | select(startswith(\"${PREFIX}\"))] | .[0] // empty" 2>/dev/null || true)
+            if [ -n "$LATEST_DATED" ]; then
+              gh release edit "$LATEST_DATED" --notes "Verified unchanged on ${DATE}"
+            else
+              gh release delete "$DATED_TAG" -y --cleanup-tag 2>/dev/null || true
+              gh release create "$DATED_TAG" \
+                --title "${LABEL} — ${DATE}" \
+                --prerelease \
+                --notes "Built on ${DATE}" \
+                "Archive/${OUTPUT}_${DATE}.pdf"
+            fi
+          fi
+
+          # Recreate latest-{variant} LAST so created_at is newest → shows first
+          gh release delete "$LATEST_TAG" -y --cleanup-tag 2>/dev/null || true
+          if [ "$CHANGED" = "1" ]; then
+            gh release create "$LATEST_TAG" \
+              --title "${LABEL}" \
+              --notes "Built on ${DATE}" \
+              "${OUTPUT}.pdf"
+          else
+            gh release create "$LATEST_TAG" \
+              --title "${LABEL}" \
+              --notes "Verified unchanged on ${DATE}" \
+              "${OUTPUT}.pdf"
+          fi
+
+      - name: Generate Pages site
+        if: github.ref_name == 'main'
+        run: |
+          mkdir -p public
+          cp template/index.html public/index.html
+          sed -i "s|{{OWNER}}|${{ github.repository_owner }}|g; s|{{REPO}}|${{ github.event.repository.name }}|g" public/index.html
+
+      - name: Setup Pages
+        if: github.ref_name == 'main'
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        if: github.ref_name == 'main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'public'
+
+      - name: Deploy to Pages
+        if: github.ref_name == 'main'
+        id: deployment
+        uses: actions/deploy-pages@v4

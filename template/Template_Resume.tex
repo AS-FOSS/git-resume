@@ -1,0 +1,268 @@
+%-------------------------
+% Resume in LaTeX
+% Modern sans-serif layout, ATS-friendly
+%-------------------------
+
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage{fontspec}
+\setmainfont{Ubuntu}[
+    Path=fonts/,
+    Extension=.ttf,
+    UprightFont=Ubuntu-Regular,
+    BoldFont=Ubuntu-Bold,
+    ItalicFont=Ubuntu-Italic,
+    BoldItalicFont=Ubuntu-BoldItalic,
+    Numbers=Monospaced
+]
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{tabularx}
+\usepackage{fontawesome5}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{needspace}
+
+\geometry{
+    letterpaper,
+    left=0.6in,
+    right=0.6in,
+    top=0.55in,
+    bottom=0.55in
+}
+
+% Accent color
+\definecolor{accent}{HTML}{1F4E79}
+\definecolor{subtle}{HTML}{555555}
+\definecolor{rule}{HTML}{BBBBBB}
+
+\hypersetup{
+    colorlinks=true,
+    urlcolor=accent,
+    linkcolor=accent
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Section formatting --- colored bold, thin rule
+\titleformat{\section}
+  {\Large\bfseries\color{accent}}
+  {}{0em}
+  {}
+  [\vspace{2pt}\color{rule}\titlerule\color{black}]
+\titlespacing*{\section}{0pt}{12pt}{10pt}
+
+% Custom commands
+% Indent width for body content (icon column)
+\newlength{\bodyindent}
+\setlength{\bodyindent}{12mm}
+
+% #1=icon path  #2=company  #3=location  #4=role  #5=dates
+\newcommand{\jobheading}[5]{%
+  \vspace{8pt}
+  \noindent
+  \begin{minipage}[c]{\bodyindent}
+    \centering
+    \includegraphics[width=8mm,height=8mm,keepaspectratio]{#1}
+  \end{minipage}%
+  \begin{minipage}[c]{\dimexpr\textwidth-\bodyindent}
+    \textbf{\large #2}\hfill\textcolor{subtle}{#3}\\
+    \textcolor{subtle}{#4}\hfill\textcolor{subtle}{#5}
+  \end{minipage}
+  \vspace{-4pt}
+}
+
+% Entry without icon, but aligned with iconned entries
+% #1=title  #2=date
+\newcommand{\plainheading}[2]{%
+  \vspace{4pt}
+  \noindent
+  \hspace{\bodyindent}%
+  \begin{minipage}[t]{\dimexpr\textwidth-\bodyindent}
+    \vspace{0pt}
+    \begin{tabular*}{\linewidth}{l@{\extracolsep{\fill}}r}
+      #1 & \textcolor{subtle}{#2} \\
+    \end{tabular*}
+  \end{minipage}
+  \vspace{-2pt}
+}
+
+% Entry with icon, single-line (for certs, projects)
+% #1=icon  #2=title  #3=date
+\newcommand{\iconentry}[3]{%
+  \vspace{4pt}
+  \noindent
+  \begin{minipage}[c]{\bodyindent}
+    \centering
+    \includegraphics[width=8mm,height=8mm,keepaspectratio]{#1}
+  \end{minipage}%
+  \begin{minipage}[c]{\dimexpr\textwidth-\bodyindent}
+    #2\hfill\textcolor{subtle}{#3}
+  \end{minipage}
+  \vspace{-2pt}
+}
+
+\newcommand{\projheading}[2]{%
+  \vspace{2pt}
+  \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+    #1 & \textcolor{subtle}{#2} \\
+  \end{tabular*}
+  \vspace{-6pt}
+}
+
+% #1=icon  #2=school  #3=degree  #4=dates
+\newcommand{\eduheading}[4]{%
+  \vspace{4pt}
+  \noindent
+  \begin{minipage}[c]{\bodyindent}
+    \centering
+    \includegraphics[width=8mm,height=8mm,keepaspectratio]{#1}
+  \end{minipage}%
+  \begin{minipage}[c]{\dimexpr\textwidth-\bodyindent}
+    \textbf{#2}\hfill\textcolor{subtle}{#4}\\
+    \textcolor{subtle}{#3}
+  \end{minipage}
+  \vspace{-2pt}
+}
+
+\setlist[itemize]{leftmargin=\dimexpr\bodyindent+1em, topsep=2pt, itemsep=1pt, parsep=0pt, label=\color{accent}\textbullet}
+
+% Sub-role heading within a single job entry (e.g. dual-hat responsibilities)
+\newcommand{\subrole}[1]{%
+  \par\vspace{4pt}\noindent\hspace*{\bodyindent}%
+  \textbf{\color{accent}\small #1}\par\vspace{-2pt}%
+}
+
+% Highlight tag row beneath job/project title --- appears outside bullet list
+% #1=label (e.g. Stack, Acquired Skills)  #2=content
+\newcommand{\stackline}[2]{%
+  \par\vspace{3pt}
+  \noindent\hspace*{\bodyindent}%
+  \begin{minipage}[t]{\dimexpr\linewidth-\bodyindent}
+    \small\textbf{\color{accent}#1:}~\textcolor{subtle}{#2}
+  \end{minipage}\par
+  \vspace{1pt}
+}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+%-------- HEADER --------
+\begin{center}
+    {\huge \textbf{\MakeUppercase{John Doe}}} \\[3pt]
+    {\Large \color{accent} Staff Data Engineer} \\[6pt]
+    {\small
+        \faEnvelope\ \href{mailto:john.doe@example.com}{john.doe@example.com} \quad
+        \faLinkedin\ \href{https://linkedin.com/in/johndoe}{/in/johndoe} \quad
+        \faGithub\ \href{https://github.com/johndoe}{github.com/johndoe} \quad
+        \faMapMarker*\ San Francisco, CA
+    }
+\end{center}
+
+%-------- SUMMARY --------
+\vspace{6pt}
+{\small Staff Data Engineer with 8+ years designing and operating distributed data systems at scale. Led data platform initiatives serving 500+ engineers and petabyte-scale analytics workloads. Deep expertise in Apache Spark, Flink, Kafka, and real-time streaming architectures. Open-source contributor and maintainer of multiple data infrastructure projects.\par}
+
+%-------- EXPERIENCE --------
+\section{Experience}
+
+\jobheading{icons/company.png}{Nexus Technologies}{San Francisco, CA}{Staff Data Engineer}{Jan 2022 -- Present}
+\subrole{Data Platform --- Real-time analytics infrastructure}
+\begin{itemize}
+    \small
+    \item Designed and built a unified \textbf{real-time analytics platform} processing \textbf{2M+ events/sec} using Apache Kafka, Flink, and Pinot, serving sub-second OLAP queries across 12 product teams with 99.99\% uptime SLA.
+    \item Migrated the company's \textbf{10 PB+ data lake} from Hive-managed Parquet on HDFS to \textbf{Apache Iceberg on S3} with incremental table maintenance, reducing storage costs by 40\% and improving query latencies through Iceberg's native partitioning and file pruning.
+    \item Built an \textbf{internal data discovery and lineage platform} (Apache Atlas + custom enrichment layer) that indexed 15K+ datasets, tracked column-level lineage across 300+ pipelines, and reduced data incident MTTR from 4 hours to 15 minutes.
+    \item Architected a \textbf{multi-region streaming replication layer} with Kafka MirrorMaker 2 and hybrid active-active conflict resolution, enabling the company to serve EU customers from ``Frankfurt with sub-50ms p99 latencies.
+    \item Led the \textbf{data engineer interview loop redesign} — standardized rubric, system-design scenarios, and take-home evaluation — increasing hiring pipeline throughput by 60\% while maintaining quality bar.
+\end{itemize}
+\stackline{Stack}{Apache Kafka, Flink, Pinot, Iceberg, Spark, Airflow, S3, Terraform, Kubernetes, Python, Java}
+
+\jobheading{icons/company.png}{StealthLayer}{New York, NY}{Senior Data Engineer}{Mar 2018 -- Dec 2021}
+\subrole{Streaming Infrastructure}
+\begin{itemize}
+    \small
+    \item Replaced a legacy batch ETL pipeline processing \textbf{500M events/day} with a \textbf{real-time streaming architecture} using Kafka Streams and Flink, reducing event-processing latency from 4 hours to under 30 seconds and enabling live fraud-detection models.
+    \item Designed and deployed \textbf{Change Data Capture pipelines} (Debezium + Kafka Connect) ingesting from 40+ MySQL/Postgres shards, enabling near-real-time read replicas and removing the need for nightly batch dumps.
+    \item Built a \textbf{cost-intelligence layer} that tagged every Spark job and S3 object with business-unit and team cost-centers; gave finance granular per-team billing and reduced cloud spend by 25\% through reclaimable-waste identification.
+    \item Implemented \textbf{automated data quality framework} (Great Expectations + Airflow DAG orchestration) with 600+ expectations across 200 tables, cutting data-quality incidents from monthly to under 3 per quarter.
+    \item Mentored 4 junior data engineers through structured onboarding, code review pairing, and internal tech talks; 2 were promoted within 18 months.
+\end{itemize}
+\stackline{Stack}{Kafka Streams, Flink, Debezium, Airflow, Great Expectations, Spark, S3, Terraform, Docker, Python, Scala}
+
+\jobheading{icons/company.png}{RiverPoint Analytics}{Boston, MA}{Data Engineer}{Jun 2015 -- Feb 2018}
+\begin{itemize}
+    \small
+    \item Built and maintained the company's \textbf{data warehouse and ELT pipeline} (Snowflake + dbt + Airflow) serving analytics and BI for 80+ internal stakeholders; designed dimensional models for finance, marketing, and product domains.
+    \item Developed a \textbf{custom Python-based ETL framework} that abstracted away common ingestion patterns (API polling, S3 event-triggered loads, SFTP pulls) into reusable, testable plugins — reduced new pipeline development time by 70\%.
+    \item Optimized \textbf{Spark batch jobs} processing 5 TB/night of clickstream data: tuned shuffle partitions, switched to columnar encoding, and implemented incremental processing — reduced run time from 6 hours to 45 minutes and cut cluster cost by 60\%.
+    \item Created a \textbf{Snowflake cost-optimization dashboard} using Snowflake's ACCOUNT\_USAGE schema and Streamlit, giving engineering leads visibility into credit consumption by warehouse, query pattern, and team — drove a 30\% reduction in snowflake spend.
+\end{itemize}
+\stackline{Stack}{Snowflake, dbt, Airflow, Spark, Python, Streamlit, AWS (S3, EMR, Lambda), PostgreSQL, Redshift}
+
+%-------- EDUCATION --------
+\needspace{6\baselineskip}
+\section{Education}
+\eduheading{icons/edu.png}{Massachusetts Institute of Technology}{M.S., Computer Science --- Systems \& Data}{2013 -- 2015}
+\hspace*{-2pt}\eduheading{icons/edu.png}{University of Illinois Urbana-Champaign}{B.S., Computer Engineering}{2009 -- 2013}
+\vspace{4pt}
+
+%-------- PROJECTS --------
+\section{Projects}
+
+\iconentry{icons/project.png}{\textbf{Polaris} \textcolor{subtle}{$\cdot$ Declarative Flink streaming framework with auto-scaling} \quad \href{https://github.com/johndoe/polaris}{\faGithub\ GitHub}}{Jan 2025 -- Present}
+\begin{itemize}
+    \small
+    \item Designed a \textbf{YAML-driven Flink DSL} (Parse $\rightarrow$ Optimize $\rightarrow$ Compile $\rightarrow$ Deploy) that lets teams define complex streaming topologies (joins, windowed aggregations, CDC pipelines) without writing a single line of Java or Scala.
+    \item Built an \textbf{auto-scaling executor} that monitors Kafka consumer lag, Flink checkpoint duration, and backpressure metrics to dynamically adjust parallelism — reduced over-provisioning cost by 35\% with zero downtime during rescale.
+    \item Implemented \textbf{pluggable state backends} (RocksDB, Redis, DuckDB) with transparent schema evolution, so users can migrate state stores without pipeline rebuilds.
+    \item Shipped \textbf{native Prometheus metrics export} with pre-built Grafana dashboards for latency, throughput, watermark lag, and checkpoint health — adopted by 4 teams internally.
+\end{itemize}
+\stackline{Acquired Skills}{Apache Flink, Stream Processing, DSL Design, Kubernetes, Prometheus, Grafana, Open-Source}
+
+\iconentry{icons/project.png}{\textbf{Sensor} \textcolor{subtle}{$\cdot$ Cross-platform data quality \& lineage observability} \quad \href{https://github.com/johndoe/sensor}{\faGithub\ GitHub}}{Mar 2024 -- Dec 2024}
+\begin{itemize}
+    \small
+    \item Designed a \textbf{pluggable quality rule engine} (expectation $\rightarrow$ validator $\rightarrow$ action) with 30+ built-in validators (nullness, uniqueness, distribution drift, freshness, referential integrity) expressed as version-controlled YAML policies.
+    \item Built a \textbf{column-level lineage tracker} that intercepts Spark SQL plan nodes via Catalyst extensions, maps input-to-output column provenance, and emits OpenLineage-compatible events to Marquez — deployed across 80+ production pipelines.
+    \item Implemented a \textbf{drifting metrics dashboard} (pre-computed statistical profiles stored in DuckDB, served via a FastAPI backend and a React frontend) that alerted teams when schema or distribution shifts exceeded configurable thresholds — cut data-incident detection time from 6 hours to under 5 minutes.
+\end{itemize}
+\stackline{Acquired Skills}{Spark SQL Catalyst, OpenLineage, Data Quality, React, FastAPI, DuckDB, Statistical Profiling}
+
+%-------- CERTIFICATIONS --------
+\needspace{5\baselineskip}
+\section{Certifications}
+
+\iconentry{icons/cert.png}{\textbf{Google Cloud Professional Data Engineer}}{Jan 2023}
+\vspace{4pt}
+
+\iconentry{icons/cert.png}{\textbf{AWS Certified Data Analytics --- Specialty}}{Mar 2021}
+\vspace{4pt}
+
+\iconentry{icons/cert.png}{\textbf{Databricks Certified Associate Data Engineer}}{Jun 2024}
+\vspace{4pt}
+
+%-------- SKILLS --------
+\needspace{8\baselineskip}
+\section{Skills}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabularx}{\textwidth}{@{}>{\bfseries\color{accent}}l X@{}}
+    Data Engineering    & Apache Spark, Flink, Kafka, Airflow, dbt, Iceberg, Delta Lake, Pinot, Trino \\
+    Languages           & Python, Java, Scala, SQL, C++, Go, Bash \\
+    Databases           & PostgreSQL, Snowflake, BigQuery, DuckDB, ClickHouse, Redis, MongoDB, Pinot \\
+    Cloud \& DevOps     & AWS, GCP, Azure, Kubernetes, Docker, Terraform, Helm, GitHub Actions, Linux \\
+    Streaming           & Kafka Streams, Flink, Debezium, KSQL, Pulsar, Kinesis \\
+    Machine Learning    & Feature Stores, MLflow, Ray, XGBoost, scikit-learn, embedding pipelines \\
+    Backend \& Tooling  & FastAPI, gRPC, GraphQL, Pydantic, Protobuf, Git, REST \\
+    Observability       & Prometheus, Grafana, Datadog, OpenTelemetry, ELK, Jaeger \\
+    Spoken Languages    & English (Native), Spanish (Professional), German (Conversational) \\
+\end{tabularx}
+
+\end{document}

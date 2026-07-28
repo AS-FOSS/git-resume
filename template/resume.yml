@@ -1,0 +1,5 @@
+variant: general
+label: General
+author: "John Doe"
+template: "Template_Resume.tex"
+output: "JohnDoe_General"
