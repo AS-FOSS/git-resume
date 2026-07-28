@@ -160,7 +160,7 @@ jobs:
         if: github.ref_name == 'main'
         run: |
           mkdir -p public
-          cp template/index.html public/index.html
+          cp template/index.html template/pdf-sw.js public/
           sed -i "s|{{OWNER}}|${{ github.repository_owner }}|g; s|{{REPO}}|${{ github.event.repository.name }}|g" public/index.html
 
       - name: Setup Pages

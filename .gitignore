@@ -15,6 +15,7 @@
 !README.md
 !TODO.md
 !template/index.html
+!template/pdf-sw.js
 !template/resume.yml
 !.github/workflows/*.yml
 
