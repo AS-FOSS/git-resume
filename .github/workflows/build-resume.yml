@@ -161,6 +161,7 @@ jobs:
         run: |
           mkdir -p public
           cp template/index.html public/index.html
+          cp "${OUTPUT}.pdf" "public/latest.pdf"
           sed -i "s|{{OWNER}}|${{ github.repository_owner }}|g; s|{{REPO}}|${{ github.event.repository.name }}|g" public/index.html
 
       - name: Setup Pages
