@@ -17,7 +17,7 @@
 
 # git-resume
 
-Fork it, put your resume in `template/`, push. GitHub Actions compiles it, cuts a release with the PDF attached, and updates a hosted page where you can browse every version you've pushed.
+Fork it, edit and generate your resume from `template/`, push. GitHub Actions compiles it, cuts a release with the PDF attached, and updates a hosted page where you can browse every version you've pushed.
 
 ## Setup
 
