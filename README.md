@@ -1,6 +1,5 @@
-
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/554b1e63-044b-4c01-9b75-5f9c771af3fc" width="280" alt="Resume Build System logo" />
+  <img src="https://github.com/user-attachments/assets/da9e99ec-0835-4a57-b929-ff70480bdd97" width="280" alt="Resume Build System logo" />
 </p>
 
 <p align="center">
@@ -45,7 +44,7 @@ One workflow handles all of it:
 - Publishes the PDF as a release: a `latest-<variant>` tag that always points at the newest build, plus a dated `resume-<variant>-YYYY-MM-DD` tag whenever the content actually changes
 - Rebuilds the GitHub Pages viewer, which reads the release list and lets you flip between every version you've published
 
-See it in action: [sadigaxund.github.io/git-resume](https://sadigaxund.github.io/git-resume/) — two-level profile/version selector, renders PDFs inline in your browser.
+> See it in action: [sadigaxund.github.io/git-resume](https://sadigaxund.github.io/git-resume/) — two-level profile/version selector, renders PDFs inline in your browser.
 
 Nothing is committed back to the repo. The PDF and the site are build output, not history you have to manage by hand.
 
