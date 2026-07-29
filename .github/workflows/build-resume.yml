@@ -156,25 +156,43 @@ jobs:
               "${OUTPUT}.pdf"
           fi
 
+      - name: Mirror release PDFs into Pages bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p public/pdfs
+          for tag in $(gh release list --limit 1000 --json tagName -q '.[].tagName'); do
+            if [[ $tag =~ ^latest-(.+)$ ]]; then
+              variant="${BASH_REMATCH[1]}"; fname="latest.pdf"
+            elif [[ $tag =~ ^resume-(.+)-([0-9]{4}-[0-9]{2}-[0-9]{2})$ ]]; then
+              variant="${BASH_REMATCH[1]}"; fname="${BASH_REMATCH[2]}.pdf"
+            else
+              continue
+            fi
+            dir="public/pdfs/${variant}"
+            mkdir -p "$dir"
+            tmp=$(mktemp -d)
+            gh release download "$tag" -p "*.pdf" -D "$tmp" 2>/dev/null || true
+            for f in "$tmp"/*.pdf; do
+              [ -f "$f" ] && mv "$f" "$dir/$fname"
+            done
+            rm -rf "$tmp"
+          done
+
       - name: Generate Pages site
-        if: github.ref_name == 'main'
         run: |
           mkdir -p public
           cp template/index.html public/index.html
-          cp "${OUTPUT}.pdf" "public/latest.pdf"
           sed -i "s|{{OWNER}}|${{ github.repository_owner }}|g; s|{{REPO}}|${{ github.event.repository.name }}|g" public/index.html
 
       - name: Setup Pages
-        if: github.ref_name == 'main'
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
-        if: github.ref_name == 'main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: 'public'
 
       - name: Deploy to Pages
-        if: github.ref_name == 'main'
         id: deployment
         uses: actions/deploy-pages@v4
