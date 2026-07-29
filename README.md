@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/da9e99ec-0835-4a57-b929-ff70480bdd97" width="280" alt="Resume Build System logo" />
+  <img src="https://github.com/user-attachments/assets/df86b189-4ef3-4c6e-9169-a1dda9ffc630" width="280" alt="Resume Build System logo" />
 </p>
 
 <p align="center">
