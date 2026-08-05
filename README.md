@@ -44,7 +44,7 @@ One workflow handles all of it:
 - Publishes the PDF as a release: a `latest-<variant>` tag that always points at the newest build, plus a dated `resume-<variant>-YYYY-MM-DD` tag whenever the content actually changes
 - Rebuilds the GitHub Pages viewer, which reads the release list and lets you flip between every version you've published
 
-> See it in action: [sadigaxund.github.io/git-resume](https://sadigaxund.github.io/git-resume/) — two-level profile/version selector, renders PDFs inline in your browser.
+> See it in action: [as-foss.github.io/git-resume/](https://as-foss.github.io/git-resume/) — two-level profile/version selector, renders PDFs inline in your browser.
 
 Nothing is committed back to the repo. The PDF and the site are build output, not history you have to manage by hand.
 
