@@ -17,54 +17,49 @@
 
 # git-resume
 
-Write your resume in LaTeX, push it, and get a compiled PDF release plus a hosted viewer out of it — no manual build steps. See it in action: [as-foss.github.io/git-resume/](https://as-foss.github.io/git-resume/) or watch the [demo video](https://www.youtube.com/watch?v=CiZllBuUCZ4).
+Write your resume in LaTeX and push it. GitHub Actions compiles it into a PDF, attaches it to a release, and updates a hosted page where you can flip through every version you've pushed. Nothing gets committed back to the repo.
 
-## Features
-
-- **One push ships everything** — CI compiles, releases, and deploys the viewer. Nothing is committed back to the repo; the PDF and site are build output only.
-- **Versioned PDFs** — a `latest-<variant>` release that always points at the newest build, plus dated `resume-<variant>-YYYY-MM-DD` snapshots whenever content changes.
-- **Live viewer** — the Pages site reads the release list: pick a profile, flip through every published version, and render PDFs inline in the browser.
-- **Per-application variants** — a `resume/<variant>` branch builds and releases independently, with its own tags and its own entry in the viewer's profile dropdown.
-
-## Public or private?
-
-Forking keeps you in the fork network, so you can pull updates from this repo. If you'd rather keep your resume private, hit **Use this template** (next to the star) and create the repo as private. Two trade-offs: your copy leaves the fork network, so you won't receive updates from this repository anymore, and GitHub Pages isn't available on private repositories unless you're on a paid plan (GitHub Pro or higher).
+Live demo: [as-foss.github.io/git-resume](https://as-foss.github.io/git-resume/) · [demo video](https://www.youtube.com/watch?v=CiZllBuUCZ4)
 
 ## Quick start
 
-1. Create your copy of the repo — hit **Use this template** (next to the star) or fork it (see [Public or private?](#public-or-private)), then clone your copy
-2. Replace the `.tex` file in `template/` with your resume and drop any logos into `template/icons/`
+1. Hit **Use this template** or fork, then clone your copy. Want it private? See [Public or private?](#public-or-private).
+2. Put your resume in `template/`: replace the `.tex` and drop any logos into `template/icons/`.
 3. Edit `template/resume.yml`:
    ```yaml
    variant: general
    label: General
    author: "Your Name"
    template: "YourResume.tex"
-   output: "YourName_Resume"   # optional, defaults to the .tex filename
+   output: "YourName_Resume"   # optional
    ```
-4. Set your name inside the `.tex` file itself — it's hardcoded in the header, so `resume.yml`'s `author` field won't change it for you
-5. Push to `main`
+4. Set your name in the `.tex` file. It's hardcoded in the header; `resume.yml` won't change it.
+5. Push to `main`.
 
 > [!NOTE]
-> Enable Pages once per repo (Settings → Pages → Source: GitHub Actions). Forks and template copies don't inherit this setting; each copy owner must enable it themselves.
+> Enable Pages once per repo: Settings → Pages → Source: GitHub Actions. Your copy won't have it on by default.
 
-## Variant branches
+## Public or private?
 
-`main` is your default resume. Want a tailored version for a specific application? Create a branch named `resume/<something>` with its own `resume.yml`:
+Forking keeps you in the fork network, so you can pull updates from this repo. For a private copy, use **Use this template** instead. Two trade-offs: you leave the fork network (no more updates from this repo), and GitHub Pages needs a paid plan (Pro or higher) on private repositories.
+
+## Variants
+
+One branch, one resume. `main` is your default; `resume/<something>` is a tailored version for one application. Each branch carries its own `resume.yml`:
 
 ```yaml
 variant: facebook-de
-label: Facebook — Data Engineer
+label: Facebook Data Engineer
 author: "Your Name"
 template: "Resume.tex"
 output: "YourName_Facebook_DE"
 ```
 
-Push it, and it builds and releases on its own — separate tags, separate entry in the viewer's profile dropdown. Editing one variant never touches another.
+Push the branch and it builds on its own, with its own tags and its own entry in the viewer. Editing one variant never touches another.
 
 ## Editing with AI
 
-You don't have to write LaTeX by hand. Point a free coding agent like [opencode](https://opencode.ai) at the repo and ask it to update your resume. Check `skills/` first — it holds optional writing guidance (ATS-friendliness, tone, this template's macros) meant to be read before any content gets touched. Swap in your own style guide there if you want different rules.
+You don't have to write LaTeX by hand. Point a free coding agent like [opencode](https://opencode.ai) at the repo and ask it to update your resume. Read `skills/` first: it holds optional writing guidance (ATS-friendliness, tone, template macros) for humans and agents alike. Swap in your own style guide if you want different rules.
 
 ## Layout
 
