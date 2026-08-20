@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <strong>Use the template. Push a <code>.tex</code>. Get versioned PDFs + a live viewer — automatically.</strong>
+  <strong>A tiny release pipeline for your resume — push a change, keep every version.</strong>
 </p>
 
 <p align="center">
@@ -17,7 +17,11 @@
 
 # git-resume
 
-Write your resume in LaTeX and push it. GitHub Actions compiles it into a PDF, attaches it to a release, and updates a hosted page where you can flip through every version you've pushed. Nothing gets committed back to the repo.
+git-resume is a small release pipeline for your resume. You edit a LaTeX file and push; CI compiles it, publishes a `latest-<variant>` release plus dated snapshots, and rebuilds a hosted viewer, so every version you've pushed stays one click away. You write the resume. The repo handles the workflow.
+
+```
+git push → CI compile → release (latest + dated tags) → live viewer
+```
 
 Live demo: [as-foss.github.io/git-resume](https://as-foss.github.io/git-resume/) · [demo video](https://www.youtube.com/watch?v=CiZllBuUCZ4)
 
@@ -39,13 +43,13 @@ Live demo: [as-foss.github.io/git-resume](https://as-foss.github.io/git-resume/)
 > [!NOTE]
 > Enable Pages once per repo: Settings → Pages → Source: GitHub Actions. Your copy won't have it on by default.
 
-## Public or private?
+## Privacy
 
 Forking keeps you in the fork network, so you can pull updates from this repo. For a private copy, use **Use this template** instead. Two trade-offs: you leave the fork network (no more updates from this repo), and GitHub Pages needs a paid plan (Pro or higher) on private repositories.
 
 ## Variants
 
-One branch, one resume. `main` is your default; `resume/<something>` is a tailored version for one application. Each branch carries its own `resume.yml`:
+One branch, one resume. `main` is your default; `resume/<role>` is a tailored version for one application. Each branch carries its own `resume.yml`:
 
 ```yaml
 variant: facebook-de
