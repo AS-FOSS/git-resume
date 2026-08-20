@@ -45,9 +45,9 @@ Every branch carries its own `template/resume.yml`:
 ```yaml
 variant: facebook-de
 label: Facebook — Data Engineer
-author: "Sadig Akhund"
+author: "Your Name"
 template: "Resume.tex"
-output: "SadigAkhund_Facebook_DE"
+output: "YourName_Facebook_DE"
 ```
 
 - **`variant`** — a short slug used in release tag names (must be filesystem-safe, e.g. `facebook-de`)
