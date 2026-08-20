@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <strong>Fork it. Push a <code>.tex</code>. Get versioned PDFs + a live viewer — automatically.</strong>
+  <strong>Use the template. Push a <code>.tex</code>. Get versioned PDFs + a live viewer — automatically.</strong>
 </p>
 
 <p align="center">
@@ -28,7 +28,7 @@ Write your resume in LaTeX, push it, and get a compiled PDF release plus a hoste
 
 ## Quick start
 
-1. Fork and clone this repo
+1. Create your copy of the repo — hit **Use this template** (next to the star) or fork it, then clone your copy
 2. Replace the `.tex` file in `template/` with your resume and drop any logos into `template/icons/`
 3. Edit `template/resume.yml`:
    ```yaml
@@ -42,7 +42,10 @@ Write your resume in LaTeX, push it, and get a compiled PDF release plus a hoste
 5. Push to `main`
 
 > [!NOTE]
-> Enable Pages once per repo (Settings → Pages → Source: GitHub Actions). Forks don't inherit this setting; each fork owner must enable it themselves.
+> **Prefer a private copy?** Use the **Use this template** button instead of forking and create the repo as private. Two trade-offs: your copy leaves the fork network, so you won't receive updates from this repository anymore, and GitHub Pages is not available on private repositories unless you're on a paid plan (GitHub Pro or higher).
+
+> [!NOTE]
+> Enable Pages once per repo (Settings → Pages → Source: GitHub Actions). Forks and template copies don't inherit this setting; each copy owner must enable it themselves.
 
 ## Variant branches
 
