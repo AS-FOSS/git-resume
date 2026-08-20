@@ -170,6 +170,49 @@ inline. The download button still links directly to the GitHub Releases URL.
   and `Archive/` re-ignored afterward. Adding a new asset type needs an
   explicit `!` allow rule or it silently won't be tracked.
 
+## Typography & formatting conventions
+
+Established style rules for resume content. Follow these when adding or
+editing entries so new text matches the existing layout.
+
+**Bold keyword styling** (the visual hierarchy of keywords in bullet text):
+
+- `\kw{single token}` — bold **slate-gray (#2F4F4F)** keyword, wrapped in
+  `\mbox` so it can never hyphenate or split across lines (kills "Ter-raform"
+  style breaks). Use for single-word tech terms: `\kw{Spark}`, `\kw{Trino}`.
+- `\kwb{multi-word phrase}` — same bold slate-gray styling but **breakable
+  at spaces**. Use for phrases: `\kwb{Kafka Schema Registry}`,
+  `\kwb{80M+ customer reviews}`.
+- `\tech{single token}` — bold **black** unbreakable keyword; reserved for
+  entry titles and the header (`\tech{Polaris}`, the name block), not for
+  body keywords.
+- **Never freeze a multi-word phrase in `\mbox`** (i.e. don't use `\kw` on
+  phrases). An unbreakable phrase near the end of a line overflows the
+  column (a "80M+ customer reviews" phrase once produced a 31pt overfull
+  `\hbox`). Phrases get `\kwb`.
+- Multi-word keyword phrases that carry the emphasis (`80M+ customer
+  reviews`, `18 business-critical tables`) use `\kwb`, not `\kw`.
+
+**Layout & line breaking:**
+
+- The preamble loads `\usepackage{microtype}` and sets
+  `\emergencystretch=1.5em`; both keep justified lines clean and prevent
+  orphan syllables. Do not remove them.
+- The compiled document must stay **2 pages** with **no Overfull `\hbox`
+  warnings** beyond ~1pt. If a new bullet creates an overfull line, prefer
+  rewording or switching a `\kw` to `\kwb` over deleting content.
+- Local TeX Live may lack `microtype.sty` (CI's `texlive-full` image has
+  it). To compile locally, temporarily comment the `\usepackage{microtype}`
+  line, build, then restore it before committing.
+
+**History (why these exist):** keyword hyphenation ("Ter-raform") and a
+dangling syllable widow on the final line of a bullet looked bad; `\kw` +
+`\emergencystretch` fixed it. Labeled sentence starters ("Data Ingestion &
+Resilience:", etc.) were tried in four styles (all-caps small, plain bold,
+plain text, accent bold) and then removed entirely — bullets now start
+directly with the description. The slate-gray keyword color was chosen to
+recede behind the bold text hierarchy.
+
 ## Adding a new variant
 
 1. Create a branch from `main`: `git checkout -b resume/<variant-id>`
@@ -216,3 +259,6 @@ purely for whoever is writing or editing resume content, human or agent.
    `resume.yml` won't do this for you)
 5. Push to `main` — CI compiles, releases, and deploys the Pages viewer. Enable
    Pages once (Settings → Pages → Source: GitHub Actions) the first time.
+
+Note: at the very end pass the resume through the humanizer skill:
+https://raw.githubusercontent.com/blader/humanizer/refs/heads/main/SKILL.md

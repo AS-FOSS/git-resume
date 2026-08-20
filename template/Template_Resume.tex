@@ -25,6 +25,9 @@
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{needspace}
+\usepackage{microtype}
+
+\emergencystretch=1.5em
 
 \geometry{
     letterpaper,
@@ -38,6 +41,21 @@
 \definecolor{accent}{HTML}{1F4E79}
 \definecolor{subtle}{HTML}{555555}
 \definecolor{rule}{HTML}{BBBBBB}
+\definecolor{logobg}{HTML}{ECECEC}
+\definecolor{keyword}{HTML}{2F4F4F}
+
+% Logo tile - light gray box so white-background logos stand out on the white page
+\newcommand{\logobox}[1]{%
+  {\setlength{\fboxsep}{2.5pt}%
+   \colorbox{logobg}{\includegraphics[width=7mm,height=7mm,keepaspectratio]{#1}}}%
+}
+
+% Unbreakable bold keyword - no hyphenation inside tech terms
+\newcommand{\tech}[1]{\textbf{\mbox{#1}}}
+
+% Bold slate-gray keywords: \kw unbreakable (single token), \kwb breakable (phrase)
+\newcommand{\kw}[1]{\textcolor{keyword}{\tech{#1}}}
+\newcommand{\kwb}[1]{\textcolor{keyword}{\textbf{#1}}}
 
 \hypersetup{
     colorlinks=true,
@@ -49,6 +67,8 @@
 \fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
+\fancyfoot[L]{\small\color{subtle}John Doe}
+\fancyfoot[R]{\small\color{subtle}\thepage}
 
 % Section formatting --- colored bold, thin rule
 \titleformat{\section}
@@ -69,7 +89,7 @@
   \noindent
   \begin{minipage}[c]{\bodyindent}
     \centering
-    \includegraphics[width=8mm,height=8mm,keepaspectratio]{#1}
+    \logobox{#1}
   \end{minipage}%
   \begin{minipage}[c]{\dimexpr\textwidth-\bodyindent}
     \textbf{\large #2}\hfill\textcolor{subtle}{#3}\\
@@ -100,7 +120,7 @@
   \noindent
   \begin{minipage}[c]{\bodyindent}
     \centering
-    \includegraphics[width=8mm,height=8mm,keepaspectratio]{#1}
+    \logobox{#1}
   \end{minipage}%
   \begin{minipage}[c]{\dimexpr\textwidth-\bodyindent}
     #2\hfill\textcolor{subtle}{#3}
@@ -122,7 +142,7 @@
   \noindent
   \begin{minipage}[c]{\bodyindent}
     \centering
-    \includegraphics[width=8mm,height=8mm,keepaspectratio]{#1}
+    \logobox{#1}
   \end{minipage}%
   \begin{minipage}[c]{\dimexpr\textwidth-\bodyindent}
     \textbf{#2}\hfill\textcolor{subtle}{#4}\\
@@ -156,7 +176,7 @@
 
 %-------- HEADER --------
 \begin{center}
-    {\huge \textbf{\MakeUppercase{John Doe}}} \\[3pt]
+    {\huge \tech{\MakeUppercase{John Doe}}} \\[3pt]
     {\Large \color{accent} Staff Data Engineer} \\[6pt]
     {\small
         \faEnvelope\ \href{mailto:john.doe@example.com}{john.doe@example.com} \quad
@@ -177,11 +197,11 @@
 \subrole{Data Platform --- Real-time analytics infrastructure}
 \begin{itemize}
     \small
-    \item Designed and built a unified \textbf{real-time analytics platform} processing \textbf{2M+ events/sec} using Apache Kafka, Flink, and Pinot, serving sub-second OLAP queries across 12 product teams with 99.99\% uptime SLA.
-    \item Migrated the company's \textbf{10 PB+ data lake} from Hive-managed Parquet on HDFS to \textbf{Apache Iceberg on S3} with incremental table maintenance, reducing storage costs by 40\% and improving query latencies through Iceberg's native partitioning and file pruning.
-    \item Built an \textbf{internal data discovery and lineage platform} (Apache Atlas + custom enrichment layer) that indexed 15K+ datasets, tracked column-level lineage across 300+ pipelines, and reduced data incident MTTR from 4 hours to 15 minutes.
-    \item Architected a \textbf{multi-region streaming replication layer} with Kafka MirrorMaker 2 and hybrid active-active conflict resolution, enabling the company to serve EU customers from ``Frankfurt with sub-50ms p99 latencies.
-    \item Led the \textbf{data engineer interview loop redesign} — standardized rubric, system-design scenarios, and take-home evaluation — increasing hiring pipeline throughput by 60\% while maintaining quality bar.
+\item Designed and built a unified \kwb{real-time analytics platform} processing \kwb{2M+ events/sec} using Apache Kafka, Flink, and Pinot, serving sub-second OLAP queries across 12 product teams with 99.99\% uptime SLA.
+    \item Migrated the company's \kwb{10 PB+ data lake} from Hive-managed Parquet on HDFS to \kwb{Apache Iceberg on S3} with incremental table maintenance, reducing storage costs by 40\% and improving query latencies through Iceberg's native partitioning and file pruning.
+    \item Built an \kwb{internal data discovery and lineage platform} (Apache Atlas + custom enrichment layer) that indexed 15K+ datasets, tracked \kwb{column-level lineage} across 300+ pipelines, and reduced data incident MTTR from 4 hours to 15 minutes.
+    \item Architected a \kwb{multi-region streaming replication layer} with Kafka MirrorMaker 2 and hybrid active-active conflict resolution, enabling the company to serve EU customers from ``Frankfurt with sub-50ms p99 latencies.
+    \item Led the \kwb{data engineer interview loop redesign} — standardized rubric, system-design scenarios, and take-home evaluation — increasing hiring pipeline throughput by 60\% while maintaining quality bar.
 \end{itemize}
 \stackline{Stack}{Apache Kafka, Flink, Pinot, Iceberg, Spark, Airflow, S3, Terraform, Kubernetes, Python, Java}
 
@@ -189,10 +209,10 @@
 \subrole{Streaming Infrastructure}
 \begin{itemize}
     \small
-    \item Replaced a legacy batch ETL pipeline processing \textbf{500M events/day} with a \textbf{real-time streaming architecture} using Kafka Streams and Flink, reducing event-processing latency from 4 hours to under 30 seconds and enabling live fraud-detection models.
-    \item Designed and deployed \textbf{Change Data Capture pipelines} (Debezium + Kafka Connect) ingesting from 40+ MySQL/Postgres shards, enabling near-real-time read replicas and removing the need for nightly batch dumps.
-    \item Built a \textbf{cost-intelligence layer} that tagged every Spark job and S3 object with business-unit and team cost-centers; gave finance granular per-team billing and reduced cloud spend by 25\% through reclaimable-waste identification.
-    \item Implemented \textbf{automated data quality framework} (Great Expectations + Airflow DAG orchestration) with 600+ expectations across 200 tables, cutting data-quality incidents from monthly to under 3 per quarter.
+    \item Replaced a legacy batch ETL pipeline processing \kwb{500M events/day} with a \kwb{real-time streaming architecture} using Kafka Streams and Flink, reducing event-processing latency from 4 hours to under 30 seconds and enabling live fraud-detection models.
+    \item Designed and deployed \kwb{Change Data Capture pipelines} (Debezium + Kafka Connect) ingesting from 40+ MySQL/Postgres shards, enabling near-real-time read replicas and removing the need for nightly batch dumps.
+    \item Built a \kwb{cost-intelligence layer} that tagged every Spark job and S3 object with business-unit and team cost-centers; gave finance granular per-team billing and reduced cloud spend by 25\% through reclaimable-waste identification.
+    \item Implemented \kwb{automated data quality framework} (Great Expectations + Airflow DAG orchestration) with 600+ expectations across 200 tables, cutting data-quality incidents from monthly to under 3 per quarter.
     \item Mentored 4 junior data engineers through structured onboarding, code review pairing, and internal tech talks; 2 were promoted within 18 months.
 \end{itemize}
 \stackline{Stack}{Kafka Streams, Flink, Debezium, Airflow, Great Expectations, Spark, S3, Terraform, Docker, Python, Scala}
@@ -200,10 +220,10 @@
 \jobheading{icons/company.png}{RiverPoint Analytics}{Boston, MA}{Data Engineer}{Jun 2015 -- Feb 2018}
 \begin{itemize}
     \small
-    \item Built and maintained the company's \textbf{data warehouse and ELT pipeline} (Snowflake + dbt + Airflow) serving analytics and BI for 80+ internal stakeholders; designed dimensional models for finance, marketing, and product domains.
-    \item Developed a \textbf{custom Python-based ETL framework} that abstracted away common ingestion patterns (API polling, S3 event-triggered loads, SFTP pulls) into reusable, testable plugins — reduced new pipeline development time by 70\%.
-    \item Optimized \textbf{Spark batch jobs} processing 5 TB/night of clickstream data: tuned shuffle partitions, switched to columnar encoding, and implemented incremental processing — reduced run time from 6 hours to 45 minutes and cut cluster cost by 60\%.
-    \item Created a \textbf{Snowflake cost-optimization dashboard} using Snowflake's ACCOUNT\_USAGE schema and Streamlit, giving engineering leads visibility into credit consumption by warehouse, query pattern, and team — drove a 30\% reduction in snowflake spend.
+    \item Built and maintained the company's \kwb{data warehouse and ELT pipeline} (Snowflake + dbt + Airflow) serving analytics and BI for 80+ internal stakeholders; designed dimensional models for finance, marketing, and product domains.
+    \item Developed a \kwb{custom Python-based ETL framework} that abstracted away common ingestion patterns (API polling, S3 event-triggered loads, SFTP pulls) into reusable, testable plugins — reduced new pipeline development time by 70\%.
+    \item Optimized \kwb{Spark batch jobs} processing 5 TB/night of clickstream data: tuned shuffle partitions, switched to columnar encoding, and implemented incremental processing — reduced run time from 6 hours to 45 minutes and cut cluster cost by 60\%.
+    \item Created a \kwb{Snowflake cost-optimization dashboard} using Snowflake's ACCOUNT\_USAGE schema and Streamlit, giving engineering leads visibility into credit consumption by warehouse, query pattern, and team — drove a 30\% reduction in snowflake spend.
 \end{itemize}
 \stackline{Stack}{Snowflake, dbt, Airflow, Spark, Python, Streamlit, AWS (S3, EMR, Lambda), PostgreSQL, Redshift}
 
@@ -217,22 +237,22 @@
 %-------- PROJECTS --------
 \section{Projects}
 
-\iconentry{icons/project.png}{\textbf{Polaris} \textcolor{subtle}{$\cdot$ Declarative Flink streaming framework with auto-scaling} \quad \href{https://github.com/johndoe/polaris}{\faGithub\ GitHub}}{Jan 2025 -- Present}
+\iconentry{icons/project.png}{\tech{Polaris} \textcolor{subtle}{$\cdot$ Declarative Flink streaming framework with auto-scaling} \quad \href{https://github.com/johndoe/polaris}{\faGithub\ GitHub}}{Jan 2025 -- Present}
 \begin{itemize}
     \small
-    \item Designed a \textbf{YAML-driven Flink DSL} (Parse $\rightarrow$ Optimize $\rightarrow$ Compile $\rightarrow$ Deploy) that lets teams define complex streaming topologies (joins, windowed aggregations, CDC pipelines) without writing a single line of Java or Scala.
-    \item Built an \textbf{auto-scaling executor} that monitors Kafka consumer lag, Flink checkpoint duration, and backpressure metrics to dynamically adjust parallelism — reduced over-provisioning cost by 35\% with zero downtime during rescale.
-    \item Implemented \textbf{pluggable state backends} (RocksDB, Redis, DuckDB) with transparent schema evolution, so users can migrate state stores without pipeline rebuilds.
-    \item Shipped \textbf{native Prometheus metrics export} with pre-built Grafana dashboards for latency, throughput, watermark lag, and checkpoint health — adopted by 4 teams internally.
+    \item Designed a \kwb{YAML-driven Flink DSL} (Parse $\rightarrow$ Optimize $\rightarrow$ Compile $\rightarrow$ Deploy) that lets teams define complex streaming topologies (joins, windowed aggregations, CDC pipelines) without writing a single line of Java or Scala.
+    \item Built an \kwb{auto-scaling executor} that monitors Kafka consumer lag, Flink checkpoint duration, and backpressure metrics to dynamically adjust parallelism — reduced over-provisioning cost by 35\% with zero downtime during rescale.
+    \item Implemented \kwb{pluggable state backends} (RocksDB, Redis, DuckDB) with transparent schema evolution, so users can migrate state stores without pipeline rebuilds.
+    \item Shipped \kwb{native Prometheus metrics export} with pre-built Grafana dashboards for latency, throughput, watermark lag, and checkpoint health — adopted by 4 teams internally.
 \end{itemize}
 \stackline{Acquired Skills}{Apache Flink, Stream Processing, DSL Design, Kubernetes, Prometheus, Grafana, Open-Source}
 
-\iconentry{icons/project.png}{\textbf{Sensor} \textcolor{subtle}{$\cdot$ Cross-platform data quality \& lineage observability} \quad \href{https://github.com/johndoe/sensor}{\faGithub\ GitHub}}{Mar 2024 -- Dec 2024}
+\iconentry{icons/project.png}{\tech{Sensor} \textcolor{subtle}{$\cdot$ Cross-platform data quality \& lineage observability} \quad \href{https://github.com/johndoe/sensor}{\faGithub\ GitHub}}{Mar 2024 -- Dec 2024}
 \begin{itemize}
     \small
-    \item Designed a \textbf{pluggable quality rule engine} (expectation $\rightarrow$ validator $\rightarrow$ action) with 30+ built-in validators (nullness, uniqueness, distribution drift, freshness, referential integrity) expressed as version-controlled YAML policies.
-    \item Built a \textbf{column-level lineage tracker} that intercepts Spark SQL plan nodes via Catalyst extensions, maps input-to-output column provenance, and emits OpenLineage-compatible events to Marquez — deployed across 80+ production pipelines.
-    \item Implemented a \textbf{drifting metrics dashboard} (pre-computed statistical profiles stored in DuckDB, served via a FastAPI backend and a React frontend) that alerted teams when schema or distribution shifts exceeded configurable thresholds — cut data-incident detection time from 6 hours to under 5 minutes.
+    \item Designed a \kwb{pluggable quality rule engine} (expectation $\rightarrow$ validator $\rightarrow$ action) with 30+ built-in validators (nullness, uniqueness, distribution drift, freshness, referential integrity) expressed as version-controlled YAML policies.
+    \item Built a \kwb{column-level lineage tracker} that intercepts Spark SQL plan nodes via Catalyst extensions, maps input-to-output column provenance, and emits OpenLineage-compatible events to Marquez — deployed across 80+ production pipelines.
+    \item Implemented a \kwb{drifting metrics dashboard} (pre-computed statistical profiles stored in DuckDB, served via a FastAPI backend and a React frontend) that alerted teams when schema or distribution shifts exceeded configurable thresholds — cut data-incident detection time from 6 hours to under 5 minutes.
 \end{itemize}
 \stackline{Acquired Skills}{Spark SQL Catalyst, OpenLineage, Data Quality, React, FastAPI, DuckDB, Statistical Profiling}
 
