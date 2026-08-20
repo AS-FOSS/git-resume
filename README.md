@@ -26,9 +26,13 @@ Write your resume in LaTeX, push it, and get a compiled PDF release plus a hoste
 - **Live viewer** — the Pages site reads the release list: pick a profile, flip through every published version, and render PDFs inline in the browser.
 - **Per-application variants** — a `resume/<variant>` branch builds and releases independently, with its own tags and its own entry in the viewer's profile dropdown.
 
+## Public or private?
+
+Forking keeps you in the fork network, so you can pull updates from this repo. If you'd rather keep your resume private, hit **Use this template** (next to the star) and create the repo as private. Two trade-offs: your copy leaves the fork network, so you won't receive updates from this repository anymore, and GitHub Pages isn't available on private repositories unless you're on a paid plan (GitHub Pro or higher).
+
 ## Quick start
 
-1. Create your copy of the repo — hit **Use this template** (next to the star) or fork it, then clone your copy
+1. Create your copy of the repo — hit **Use this template** (next to the star) or fork it (see [Public or private?](#public-or-private)), then clone your copy
 2. Replace the `.tex` file in `template/` with your resume and drop any logos into `template/icons/`
 3. Edit `template/resume.yml`:
    ```yaml
@@ -40,9 +44,6 @@ Write your resume in LaTeX, push it, and get a compiled PDF release plus a hoste
    ```
 4. Set your name inside the `.tex` file itself — it's hardcoded in the header, so `resume.yml`'s `author` field won't change it for you
 5. Push to `main`
-
-> [!NOTE]
-> **Prefer a private copy?** Use the **Use this template** button instead of forking and create the repo as private. Two trade-offs: your copy leaves the fork network, so you won't receive updates from this repository anymore, and GitHub Pages is not available on private repositories unless you're on a paid plan (GitHub Pro or higher).
 
 > [!NOTE]
 > Enable Pages once per repo (Settings → Pages → Source: GitHub Actions). Forks and template copies don't inherit this setting; each copy owner must enable it themselves.
