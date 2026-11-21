@@ -193,6 +193,12 @@ jobs:
         with:
           path: 'public'
 
+  # Separate job: deploying in the same job as the upload can race the
+  # artifact listing ("No artifacts named github-pages"), actions/deploy-pages#451
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to Pages
         id: deployment
         uses: actions/deploy-pages@v4
